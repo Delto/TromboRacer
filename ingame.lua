@@ -11,7 +11,7 @@ function new()
 	o.playerAction = {}
 	o.playerAction[1] = {}
 	o.playerAction[2] = {1,2,1,2,1,3,1,2,2,1}
-	o.playerAction[3] = {1,3,3,3,2,1,2,1,2,2}
+	o.playerAction[3] = {}
 	o.playerAction[4] = {1,1,1,1,2,3,2,1,2,1}
 	o.round = 1
 	o.showingEnemys = false
@@ -41,6 +41,9 @@ function new()
 
 			o.players[i]:sequence("walk", o.players[i]:getSheet())
 		end
+
+		o.players[2].xScale = 0.6
+		o.players[2].yScale = 0.6
 
 		o.buttons = o.gameImages.findThing("button", "DEC")
 		
@@ -126,8 +129,13 @@ function new()
 					
 
 					if i == 1 then
-						o.round = o.round + 1
-						table.insert(o.timers, timer.performWithDelay(2500, o.showEnemys))
+						if o.round < 10 then
+							o.round = o.round + 1
+							table.insert(o.timers, timer.performWithDelay(2500, o.showEnemys))
+						else
+							table.insert(o.timers, timer.performWithDelay(2500, o.terminar))
+						end
+
 						if o.saltosDisponibles > 0 then
 							o.buttons[1].alpha = 1
 						else
@@ -136,12 +144,31 @@ function new()
 						o.buttons[2].alpha = 1
 						o.buttons[3].alpha = 1
 					end
+
+					
+				end
+
+				local function recuperar()
+					o.players[i]:sequence("walk", o.players[i]:getSheet())
+				end
+
+				timer.performWithDelay(1500, recuperar)
+				if o.playerAction[i][o.round] == 2 then
+					--ATACAR
+					o.players[i]:sequence("attack", o.players[i]:getSheet())
+				elseif o.playerAction[i][o.round] == 1 then
+					--SALTAR
+					o.players[i]:sequence("jump", o.players[i]:getSheet())
+				elseif o.playerAction[i][o.round] == 3 then
+					--LADRAR
+					o.players[i]:sequence("roar", o.players[i]:getSheet())
 				end
 
 				if (o.enemysID == 1 and o.playerAction[i][o.round] == 2) or (o.enemysID == 2 and o.playerAction[i][o.round] == 3) or o.playerAction[i][o.round] == nil then
-					table.insert(o.transiciones, transition.to(o.enemys[i], {time = 100, x=200, alpha = 0, onComplete = closure2}))
+					table.insert(o.transiciones, transition.to(o.enemys[i], {time = 100, x=o.players[i].x , alpha = 0, onComplete = closure2}))
 					o.parpadearImagen(o.players[i], true)
 					o.moverPlayer(i, -20)
+					o.players[i]:sequence("hit", o.players[i]:getSheet())
 				elseif o.playerAction[i][o.round] == 1 then
 					table.insert(o.transiciones, transition.to(o.enemys[i], {time = 500, x=-200, onComplete = closure2}))
 				else
@@ -160,9 +187,17 @@ function new()
 				o.enemys[i]:sequence("globlulo", "enemies")
 			end
 
-			table.insert(o.transiciones, transition.to(o.enemys[i], {time = 1200, x=300, onComplete = closure}))
+			table.insert(o.transiciones, transition.to(o.enemys[i], {time = 1200, x=o.players[i].x + 100, onComplete = closure}))
 		end
 	end
+
+	function o.terminar()
+		table.insert(o.transiciones, transition.to(o.players[1], {time=1500, x = o.players[1].x + 1500}))
+		table.insert(o.transiciones, transition.to(o.players[2], {time=1500, x = o.players[1].x + 1500}))
+		table.insert(o.transiciones, transition.to(o.players[3], {time=1500, x = o.players[1].x + 1500}))
+		table.insert(o.transiciones, transition.to(o.players[4], {time=1500, x = o.players[1].x + 1500, onComplete = o.sacarPuntuaciones}))
+	end
+
 
 	table.insert(o.timers, timer.performWithDelay(2500, o.showEnemys))
 
@@ -263,16 +298,16 @@ function new()
 		local t = math.random(250,500)
 
 		table.insert(o.transiciones, transition.to(o.players[1], {time=t, y = o.players[1].y + math.random(-20,20), onComplete = o.volver}))
-		table.insert(o.transiciones, transition.to(o.players[2], {time=t, y = o.players[2].y + math.random(-20,20)}))
+		--table.insert(o.transiciones, transition.to(o.players[2], {time=t, y = o.players[2].y + math.random(-20,20)}))
 		table.insert(o.transiciones, transition.to(o.players[3], {time=t, y = o.players[3].y + math.random(-20,20)}))
 	end
 	
 	function o.volver()
 		local t = math.random(250,500)
 
-		table.insert(o.transiciones, transition.to(o.players[1], {time=t, y = 350, onComplete = o.mover}))
-		table.insert(o.transiciones, transition.to(o.players[2], {time=t, y = 450}))
-		table.insert(o.transiciones, transition.to(o.players[3], {time=t, y = 520}))
+		table.insert(o.transiciones, transition.to(o.players[1], {time=t, y = 290, onComplete = o.mover}))
+		--table.insert(o.transiciones, transition.to(o.players[2], {time=t, y = 390}))
+		table.insert(o.transiciones, transition.to(o.players[3], {time=t, y = 480}))
 	end
 	--Runtime:addEventListener("enterFrame", controlTest)
 

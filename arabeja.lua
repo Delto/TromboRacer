@@ -17,7 +17,7 @@ module(...)
 function getExposureSheet()
 	local s = {
 
-		{nombre = "walk", loop = true, duracion = 1250, frames = {2,3} },
+		{nombre = "walk", loop = true, duracion = 125, frames = {2,3} },
 		{nombre = "jump", loop = true, duracion = 50, frames = {4,5} },	
 	}
 	return s
