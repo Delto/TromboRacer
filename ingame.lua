@@ -19,6 +19,7 @@ function new()
 	o.beatState = -4
 	o.tapNumber = 0
 	o.playersInitial = {}
+	o.saltosDisponibles = 3
 
 
 	function o.load( _player )
@@ -66,6 +67,8 @@ function new()
 		o.beatID = audio.loadSound("sounds/beat.mp3")
 
 		o.soundBeat1()
+
+		o.mover()
 	end
 
 	function o.pulsarBotton( id )
@@ -78,35 +81,36 @@ function new()
 		end
 
 		if o.playerAction[1][r] == nil then
-			if id == 1 then
+			if id == 1 and o.saltosDisponibles > 0 then
+				o.saltosDisponibles = o.saltosDisponibles - 1
 				print ("salto")
 				o.playerAction[1][r] = 1
+				o.buttons[2].alpha = 0.3
+				o.buttons[3].alpha = 0.3
 			elseif id == 2 then
 				print ("morder")
 				o.playerAction[1][r] = 2
+
+				o.buttons[1].alpha = 0.3
+				o.buttons[3].alpha = 0.3
 			elseif id == 3 then 
 				print ("ladrar")
 				o.playerAction[1][r] = 3
+				o.buttons[2].alpha = 0.3
+				o.buttons[1].alpha = 0.3
 			end
 		end
 
 		return true
 	end
 
-	function o.checkPositionBG()
-		for i=1, #o.bg do
-			if o.bg[i].x < -640 then
-				o.bg[i].x = 1915
-			end
-		end
-	end
-
 	function o.scrollBG()
 		for i=1, #o.bg do
 			o.bg[i].x = o.bg[i].x - o.vel
+			if o.bg[i].x < -1335 then
+				o.bg[i].x = 2780
+			end
 		end
-		
-		o.checkPositionBG()
 	end
 
 	function o.showEnemys()
@@ -114,28 +118,36 @@ function new()
 		o.enemysID = math.random(1,2)
 		for i = 1, #o.enemys do
 			function closure()
-				function o.closure2()
+				function closure2()
 					o.enemys[i].x = 1500
 					o.enemys[i].alpha = 1
 					o.enemys[i]:setFillColor(255,255,255)
 
+					
+
 					if i == 1 then
 						o.round = o.round + 1
 						table.insert(o.timers, timer.performWithDelay(2500, o.showEnemys))
+						if o.saltosDisponibles > 0 then
+							o.buttons[1].alpha = 1
+						else
+							o.buttons[1].alpha = 0.3
+						end
+						o.buttons[2].alpha = 1
+						o.buttons[3].alpha = 1
 					end
 				end
 
-				if o.enemysID == o.playerAction[i][o.round] then
+				if (o.enemysID == 1 and o.playerAction[i][o.round] == 2) or (o.enemysID == 2 and o.playerAction[i][o.round] == 3) or o.playerAction[i][o.round] == nil then
 					table.insert(o.transiciones, transition.to(o.enemys[i], {time = 100, x=200, alpha = 0, onComplete = closure2}))
-
-					function o.aparecerAgain()
-						table.insert(o.transiciones, transition.to(o.players[i], {time=250, alpha = 1}))
-					end
-
-					o.parpadearImagen(o.players[i], o.aparecerAgain)
+					o.parpadearImagen(o.players[i], true)
+					o.moverPlayer(i, -20)
+				elseif o.playerAction[i][o.round] == 1 then
+					table.insert(o.transiciones, transition.to(o.enemys[i], {time = 500, x=-200, onComplete = closure2}))
 				else
-					o.moverPlayer(i, -50)
-					o.parpadearImagen(o.enemys[i], o.closure2)
+					o.moverPlayer(i, 20)
+					table.insert(o.timers, timer.performWithDelay(1250, closure2))
+					o.parpadearImagen(o.enemys[i], false)
 				end
 
 				--table.insert(o.transiciones, transition.to(o.enemys[i], {time = 100, x=200, alpha = 0, onComplete = closure2}))
@@ -183,12 +195,13 @@ function new()
 		if o.players[id].x + dis > o.playersInitial[id] + 150 or o.players[id].x + dis < o.playersInitial[id] - 150 then
 			for i = 1, #o.players do
 				if id ~= i then
-					o.players[i].x = o.players[i].x - dis 
+					if o.players[i].x - dis < o.playersInitial[i] + 150 or o.players[i].x - dis > o.playersInitial[i] - 150 then
+						o.players[i].x = o.players[i].x - dis 
+					end
 				end
 			end
 		else
 			o.players[id].x = o.players[id].x + dis 
-			print (o.players[id]:getSheet())
 		end
 	end
 
@@ -219,37 +232,47 @@ function new()
 		audio.play( o.beatID, { onComplete=closure } )
 	end
 
-	function o.parpadearImagen( image, _func )
-		local times = 0
-
-		function aparecer()
-			local function closure()
-				desaparcer()
-			end
-
-			times = times + 1
-			table.insert(o.transiciones, transition.to(image, {time=250, alpha = 1, onComplete = closure}))
-		end
-
-		function desaparcer()
-			local function closure()
-				if times < 5 then
-					aparecer()
-				else
-					_func()
+	function o.parpadearImagen( image, final )
+		function aparecer1()
+			function desaparecer1()
+				function aparecer2()
+					function desaparecer2()
+						function final()
+							if final == true then
+								table.insert(o.transiciones, transition.to(image, {time=250, alpha = 1}))
+							end
+						end
+						table.insert(o.transiciones, transition.to(image, {time=250, alpha = 0, onComplete = final}))
+					end
+					table.insert(o.transiciones, transition.to(image, {time=250, alpha = 1, onComplete = aparecer2}))
 				end
+				table.insert(o.transiciones, transition.to(image, {time=250, alpha = 0, onComplete = aparecer2}))
 			end
-
-			times = times + 1
-			table.insert(o.transiciones, transition.to(image, {time=250, alpha = 0, onComplete = closure}))
+			table.insert(o.transiciones, transition.to(image, {time=250, alpha = 1, onComplete = desaparecer1}))
 		end
-		desaparcer()
+		table.insert(o.transiciones, transition.to(image, {time=250, alpha = 0, onComplete = aparecer1}))
 	end
 
 
 
 	function controlTest()
 		print(o.round)
+	end
+
+	function o.mover()
+		local t = math.random(250,500)
+
+		table.insert(o.transiciones, transition.to(o.players[1], {time=t, y = o.players[1].y + math.random(-20,20), onComplete = o.volver}))
+		table.insert(o.transiciones, transition.to(o.players[2], {time=t, y = o.players[2].y + math.random(-20,20)}))
+		table.insert(o.transiciones, transition.to(o.players[3], {time=t, y = o.players[3].y + math.random(-20,20)}))
+	end
+	
+	function o.volver()
+		local t = math.random(250,500)
+
+		table.insert(o.transiciones, transition.to(o.players[1], {time=t, y = 350, onComplete = o.mover}))
+		table.insert(o.transiciones, transition.to(o.players[2], {time=t, y = 450}))
+		table.insert(o.transiciones, transition.to(o.players[3], {time=t, y = 520}))
 	end
 	--Runtime:addEventListener("enterFrame", controlTest)
 
