@@ -9,7 +9,7 @@ class database {
     }
 
     function initialize_connection() {
-        $this->connection =  mysql_connect("31.170.160.83","a3907056_trombo","qwerty1234") or die("Connection Problems");
+        $this->connection =  mysql_connect("mysql3.000webhost.com","a3907056_trombo","qwerty1234") or die("Connection Problems");
         mysql_select_db("a3907056_trombo",$this->connection) or die("problem on access to the database");
     }
 

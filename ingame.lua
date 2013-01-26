@@ -72,8 +72,6 @@ function new()
 		o.enemys = o.gameImages.findThing("enemies", "ANI")
 
 		o.place = o.gameImages.findThing("place", "DEC")
-		
-		o.bubbles = o.gameImage.findThing("enemies
 
 		table.insert(o.transiciones, transition.to(o.place, {time = 60000, x=1024}))
 
