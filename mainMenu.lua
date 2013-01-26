@@ -182,5 +182,14 @@ function new()
 	Runtime:addEventListener( "tap", touchA );
 
 	--transition.to( heartInstance, { time=1000, y=textObject.y+100 } )
+	local a = display.newGroup()
+	a.x = display.contentWidth / 2;
+	a.y = display.contentHeight / 2;
+	
+	
+	local t = nil
+	t = require("_ANI").new   ( a, {tipo = "ANI",  nombre = "trombo", x = 500, y = 500, tamx = 1, tamy = 1, ancho = 1280, alto = 800, ang = 0, alfa = 1})
+	t:show();
+	t:sequence("walk", "trombo")
 
 end
