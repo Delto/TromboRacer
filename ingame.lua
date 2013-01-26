@@ -57,7 +57,7 @@ function new()
 			o.buttons[i]:addEventListener("tap", closure)
 		end
 
-		o.enemys = o.gameImages.findThing("enemy1", "DEC")
+		o.enemys = o.gameImages.findThing("enemies", "ANI")
 
 		o.place = o.gameImages.findThing("place", "DEC")
 
@@ -111,10 +111,10 @@ function new()
 
 	function o.showEnemys()
 		
-
+		o.enemysID = math.random(1,2)
 		for i = 1, #o.enemys do
 			function closure()
-				function closure2()
+				function o.closure2()
 					o.enemys[i].x = 1500
 					o.enemys[i].alpha = 1
 					o.enemys[i]:setFillColor(255,255,255)
@@ -125,17 +125,28 @@ function new()
 					end
 				end
 
-				if o.enemysID[i] == o.playerAction[i][o.round] then
-					o.enemys[i]:setFillColor(220,255,220)
+				if o.enemysID == o.playerAction[i][o.round] then
+					table.insert(o.transiciones, transition.to(o.enemys[i], {time = 100, x=200, alpha = 0, onComplete = closure2}))
+
+					function o.aparecerAgain()
+						table.insert(o.transiciones, transition.to(o.players[i], {time=250, alpha = 1}))
+					end
+
+					o.parpadearImagen(o.players[i], o.aparecerAgain)
 				else
 					o.moverPlayer(i, -50)
-					o.enemys[i]:setFillColor(0,0,0)
+					o.parpadearImagen(o.enemys[i], o.closure2)
 				end
 
-				table.insert(o.transiciones, transition.to(o.enemys[i], {time = 100, x=200, alpha = 0, onComplete = closure2}))
+				--table.insert(o.transiciones, transition.to(o.enemys[i], {time = 100, x=200, alpha = 0, onComplete = closure2}))
 			end
 
-			o.enemysID[i] = 1
+			
+			if o.enemysID == 1 then
+				o.enemys[i]:sequence("anticuerpo", "enemies")
+			else
+				o.enemys[i]:sequence("globlulo", "enemies")
+			end
 
 			table.insert(o.transiciones, transition.to(o.enemys[i], {time = 1200, x=300, onComplete = closure}))
 		end
@@ -206,6 +217,33 @@ function new()
 		end
 
 		audio.play( o.beatID, { onComplete=closure } )
+	end
+
+	function o.parpadearImagen( image, _func )
+		local times = 0
+
+		function aparecer()
+			local function closure()
+				desaparcer()
+			end
+
+			times = times + 1
+			table.insert(o.transiciones, transition.to(image, {time=250, alpha = 1, onComplete = closure}))
+		end
+
+		function desaparcer()
+			local function closure()
+				if times < 5 then
+					aparecer()
+				else
+					_func()
+				end
+			end
+
+			times = times + 1
+			table.insert(o.transiciones, transition.to(image, {time=250, alpha = 0, onComplete = closure}))
+		end
+		desaparcer()
 	end
 
 
