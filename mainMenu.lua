@@ -1,6 +1,7 @@
 module(..., package.seeall)
 
 function new()
+
 	workRatioWidth = 1024;
 	workRatioHeight = 768;
 
@@ -8,7 +9,13 @@ function new()
 	local aspectRatioY = workRatioHeight / display.contentWidth;
 
 	local isAnimationEnd = false;
+	
+	local http = require("socket.http")
 
+	local body, code, headers = http.request( "http://rivales.com/prueba/connect.php" );
+	print(body);
+	print(code);
+	print(headers);
 	--[[local sky = display.newImage( "sky.jpg" )
 	sky.x = - 100;
 	sky.xScale = 4;
