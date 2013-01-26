@@ -2,6 +2,7 @@ module(..., package.seeall)
 
 function new()
 	local o = {}
+
 	o.juego = nil
 	o.vel = 5
 
@@ -16,10 +17,11 @@ function new()
 	o.showingEnemys = false
 	o.enemysID = {}
 	o.beatState = -4
+	o.tapNumber = 0
 
 
 	function o.load( _player )
-		o.gameImages = require("_SCENE").new()
+		o.gameImages = require("_SCENE").new("ingame_info")
 
 		o.bg = o.gameImages.findThing("bg", "DEC")
 
@@ -51,12 +53,9 @@ function new()
 
 		table.insert(o.transiciones, transition.to(o.place, {time = 60000, x=1024}))
 
-		o.beatID = media.newEventSound( "sounds/beep.mp3" )
+		o.beatID = audio.loadSound("sounds/beat.mp3")
 
-		local playBeep = function()
-		        media.playEventSound( soundID )
-		end
-		timer.performWithDelay( 1000, playBeep, 0 )
+		o.soundBeat1()
 	end
 
 	function o.pulsarBotton( id )
@@ -136,33 +135,56 @@ function new()
 
 	function o.hacerTap( event )
 		if event.y < 710 then
-			if math.abs(o.beatState) == 0 then
-				print ("PERFECTO")
-			elseif math.abs(o.beatState) == 1 then
-				print ("1")
-			elseif math.abs(o.beatState) == 2 then
-				print ("2")
-			elseif math.abs(o.beatState) == 3 then
-				print ("3")
-			elseif math.abs(o.beatState) == 4 then
-				print ("4 ... cagada")
+			if o.tapNumber < 2 then
+				o.tapNumber = o.tapNumber + 1
+			end
+
+			if o.tapNumber == 1 and o.beatState == 1 then 
+				print ("primer beat acertado")
+			elseif o.tapNumber == 1 and o.beatState == 2 then 
+				print ("primer beat fallado")
+			elseif o.tapNumber == 1 and o.beatState == 3 then 
+				print ("venga vale lo acepto")
+			elseif o.tapNumber == 2 and o.beatState == 1 then 
+				print ("y este tambien")
+			elseif o.tapNumber == 2 and o.beatState == 2 then 
+				print ("segundo beat fallado")
+			elseif o.tapNumber == 2 and o.beatState == 3 then 
+				print ("segundo beat acertado")
+			else
+				print (o.tapNumber, o.beatState)
 			end
 		end
 	end
 
 
-	function o.changeBeatEstate()
-		o.beatState = o.beatState + 1
-		if o.beatState == 4 then
-			o.beatState = -4 
-			timer.performWithDelay(750, changeBeatEstate)
-		else
-			timer.performWithDelay(50, changeBeatEstate)
-		end		
+	function o.soundBeat1()
+		o.beatState = 1
+
+		function closure()
+			if o.beatState == 1 then
+				o.beatState = 2
+			end
+		end
+
+		audio.play( o.beatID, { onComplete=closure } )
+
+		table.insert(o.timers, timer.performWithDelay((15 - (o.round/2))* 20 , o.soundBeat2))
 	end
 
-	function o.soundBeat()
-			
+	function o.soundBeat2()
+		o.beatState = 3
+
+		function closure()
+			o.tapNumber = 0
+			o.beatState = 0
+			table.insert(o.timers, timer.performWithDelay((15 -(o.round/2))* 100 , o.soundBeat1))
+		end
+
+		audio.play( o.beatID, { onComplete=closure } )
+
+
+		
 	end
 
 
@@ -174,9 +196,6 @@ function new()
 
 	Runtime:addEventListener("enterFrame", o.scrollBG)
 	Runtime:addEventListener("tap", o.hacerTap)
-
-
-
 	return o
 end
 

@@ -1,6 +1,6 @@
 module(..., package.seeall)
 
-function new ( )
+function new ( _scene )
 
 	local o = display.newGroup()
 
@@ -20,7 +20,7 @@ function new ( )
 	local function cargarEscenario ()
 
 		-- Se carga el escenario
-		local scn = require ( "ingame_info" )
+		local scn = require ( _scene )
 
 		--print ("Memoria usada")
 		-- BG
