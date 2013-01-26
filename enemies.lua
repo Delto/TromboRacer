@@ -1,3 +1,5 @@
+module(...)
+
 -- This file is for use with Corona Game Edition
 -- 
 -- The function getSpriteSheetData() returns a table suitable for importing using sprite.newSpriteSheetFromData()
@@ -20,10 +22,9 @@ function getExposureSheet()
 	return s
 end
 
-local SpriteSheet = {}
-SpriteSheet.getSpriteSheetData = function ()
-	return {
-		frames = {
+function getSpriteSheetData()
+    local sheet = {
+        frames = {
 			{
 				name = "Anticuerpo.png",
 				spriteColorRect = { x = 0, y = 0, width = 222, height = 196 },
@@ -42,6 +43,6 @@ SpriteSheet.getSpriteSheetData = function ()
 			},
 		}
 	}
+    return sheet
 end
-return SpriteSheet
 

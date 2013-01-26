@@ -26,11 +26,19 @@ function new()
 
 		o.bg = o.gameImages.findThing("bg", "DEC")
 
-		o.players = o.gameImages.findThing("ojos", "ANI")
+		o.players = {}
+		o.players[1] = o.gameImages.findThing("arabeja", "ANI")
+		o.players[2] = o.gameImages.findThing("dammey", "ANI")
+		o.players[3] = o.gameImages.findThing("mocteria", "ANI")
+		o.players[4] = o.gameImages.findThing("trombo", "ANI")
 
 		for i=1, #o.players do
-			o.players[i]:sequence("pestaneo", "ojos")
+			--
 			o.playersInitial[i] = o.players[i].x
+			o.players[i].xScale = 0.3
+			o.players[i].yScale = 0.3
+
+			o.players[i]:sequence("walk", o.players[i]:getSheet())
 		end
 
 		o.buttons = o.gameImages.findThing("button", "DEC")
@@ -169,6 +177,7 @@ function new()
 			end
 		else
 			o.players[id].x = o.players[id].x + dis 
+			print (o.players[id]:getSheet())
 		end
 	end
 

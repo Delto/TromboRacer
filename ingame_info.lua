@@ -9,10 +9,10 @@ bg =
 
 lo =
 {
-	{tipo = "ANI",  nombre = "ojos", x = 200, y = 200, tamx = 1, tamy = 1, ancho = 1280, alto = 800, ang = 0, alfa = 1},
-	{tipo = "ANI",  nombre = "ojos", x = 200, y = 300, tamx = 1, tamy = 1, ancho = 1280, alto = 800, ang = 0, alfa = 1},
-	{tipo = "ANI",  nombre = "ojos", x = 200, y = 400, tamx = 1, tamy = 1, ancho = 1280, alto = 800, ang = 0, alfa = 1},
-	{tipo = "ANI",  nombre = "ojos", x = 200, y = 500, tamx = 1, tamy = 1, ancho = 1280, alto = 800, ang = 0, alfa = 1},
+	{tipo = "ANI",  nombre = "arabeja", x = 200, y = 200, tamx = 1, tamy = 1, ancho = 1280, alto = 800, ang = 0, alfa = 1},
+	{tipo = "ANI",  nombre = "dammey", x = 200, y = 300, tamx = 1, tamy = 1, ancho = 1280, alto = 800, ang = 0, alfa = 1},
+	{tipo = "ANI",  nombre = "mocteria", x = 200, y = 400, tamx = 1, tamy = 1, ancho = 1280, alto = 800, ang = 0, alfa = 1},
+	{tipo = "ANI",  nombre = "trombo", x = 200, y = 500, tamx = 1, tamy = 1, ancho = 1280, alto = 800, ang = 0, alfa = 1},
 
 	{tipo = "DEC",  nombre = "button", x = 200, y = 700, tamx = 1, tamy = 1, ancho = 1280, alto = 800, ang = 0, alfa = 1},
 	{tipo = "DEC",  nombre = "button", x = 600, y = 700, tamx = 1, tamy = 1, ancho = 1280, alto = 800, ang = 0, alfa = 1},

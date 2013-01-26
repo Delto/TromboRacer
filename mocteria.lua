@@ -1,3 +1,5 @@
+module(...)
+
 -- This file is for use with Corona Game Edition
 -- 
 -- The function getSpriteSheetData() returns a table suitable for importing using sprite.newSpriteSheetFromData()
@@ -15,16 +17,15 @@
 function getExposureSheet()
 	local s = {
 
-		{nombre = "walk", loop = false, duracion = 1667, frames = {1,2,3} },
+		{nombre = "walk", loop = true, duracion = 1250, frames = {1,2,3} },
 
 	}
 	return s
 end
 
-local SpriteSheet = {}
-SpriteSheet.getSpriteSheetData = function ()
-	return {
-		frames = {
+function getSpriteSheetData()
+    local sheet = {
+        frames = {
 			{
 				name = "moco1.png",
 				spriteColorRect = { x = 0, y = 0, width = 496, height = 421 },
@@ -59,6 +60,6 @@ SpriteSheet.getSpriteSheetData = function ()
 			},
 		}
 	}
+    return sheet
 end
-return SpriteSheet
 
