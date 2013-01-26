@@ -20,6 +20,14 @@ function new()
 	o.tapNumber = 0
 	o.playersInitial = {}
 	o.saltosDisponibles = 3
+	o.juegoAtivo = true
+
+	o.puntuaciones = {}
+	o.puntuaciones[1] = {p = 0, id = 1}
+	o.puntuaciones[2] = {p = 0, id = 2}
+	o.puntuaciones[3] = {p = 0, id = 3}
+	o.puntuaciones[4] = {p = 0, id = 4}
+
 
 
 	function o.load( _player )
@@ -194,18 +202,51 @@ function new()
 	end
 
 	function o.terminar()
-		table.insert(o.transiciones, transition.to(o.players[1], {time=1500, x = o.players[1].x + 1500}))
-		table.insert(o.transiciones, transition.to(o.players[2], {time=1500, x = o.players[1].x + 1500}))
-		table.insert(o.transiciones, transition.to(o.players[3], {time=1500, x = o.players[1].x + 1500}))
-		table.insert(o.transiciones, transition.to(o.players[4], {time=1500, x = o.players[1].x + 1500, onComplete = o.sacarPuntuaciones}))
+		o.juegoAtivo = false
+
+		function comp(w1,w2)
+            if w1.p > w2.p then return true end
+        end
+        
+        table.sort(o.puntuaciones,comp)
+
+        for i=1, #o.puntuaciones do
+        	print (o.puntuaciones[i].id)
+        end
+
+        function sacarPrimero()
+			table.insert(o.transiciones, transition.to(o.players[o.puntuaciones[1].id], {time=1500, x = o.players[1].x + 1500}))
+		end
+
+		function sacarSegundo()
+			table.insert(o.transiciones, transition.to(o.players[o.puntuaciones[2].id], {time=1500, x = o.players[1].x + 1500}))
+		end
+
+		function sacarTercero()
+			table.insert(o.transiciones, transition.to(o.players[o.puntuaciones[3].id], {time=1500, x = o.players[1].x + 1500}))
+		end
+
+		function sacarCuarto()
+			table.insert(o.transiciones, transition.to(o.players[o.puntuaciones[4].id], {time=1500, x = o.players[1].x + 1500}))
+		end
+
+		table.insert(o.timers, timer.performWithDelay(250, sacarPrimero))
+		table.insert(o.timers, timer.performWithDelay(500, sacarSegundo))
+		table.insert(o.timers, timer.performWithDelay(750, sacarTercero))
+		table.insert(o.timers, timer.performWithDelay(1000, sacarCuarto))
+		table.insert(o.timers, timer.performWithDelay(1250, o.sacarPuntuaciones))
+
 	end
 
+	function o.sacarPuntuaciones()
+		
+	end
 
 	table.insert(o.timers, timer.performWithDelay(2500, o.showEnemys))
 
 
 	function o.hacerTap( event )
-		if event.y < 710 then
+		if event.y < 710 and o.juegoAtivo == true then
 			if o.tapNumber < 2 then
 				o.tapNumber = o.tapNumber + 1
 			end
@@ -234,10 +275,12 @@ function new()
 				if id ~= i then
 					if o.players[i].x - dis < o.playersInitial[i] + 150 or o.players[i].x - dis > o.playersInitial[i] - 150 then
 						o.players[i].x = o.players[i].x - dis 
+						o.puntuaciones[i].p = o.puntuaciones[i].p - dis
 					end
 				end
 			end
 		else
+			o.puntuaciones[id].p = o.puntuaciones[id].p + dis
 			o.players[id].x = o.players[id].x + dis 
 		end
 	end
