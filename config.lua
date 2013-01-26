@@ -1,29 +1,13 @@
-application = {
-	content = {
-		width = 800,
-		height = 1280, 
-		scale = "letterBox",
+-- config.lua
+
+application =
+{
+	content =
+	{
+		width = 768,
+		height = 1024,
 		fps = 30,
-		
-		--[[
-        imageSuffix = {
-		    ["@2x"] = 2,
-		}
-		--]]
+		antialias = true,
+		scale = "letterbox" -- none, letterbox, zoomEven, zoomStretch
 	},
-
-    --[[
-    -- Push notifications
-
-    notification =
-    {
-        iphone =
-        {
-            types =
-            {
-                "badge", "sound", "alert", "newsstand"
-            }
-        }
-    }
-    --]]    
 }
