@@ -15,7 +15,7 @@ function new()
 	sky.yScale = 4;
 	--sky::setReferencePoint(display.TopLeftReferencePoint)
 
-	local beepSound = audio.loadSound( "beep.caf" )
+	--local beepSound = audio.loadSound( "beep.caf" )
 
 	--[[local textObject = display.newText( "Hello World!", 50, 50, native.systemFont, 24 )
 	textObject:setTextColor( 255,255,255 )]]--
@@ -164,6 +164,16 @@ function new()
 		table.insert(array , transition.to( sheetChooseInstance2, { time=500, x= display.contentWidth  / 4}))
 		table.insert(array , transition.to( sheetChooseInstance3, { time=500, x= (display.contentWidth  / 4) * 3}))
 		table.insert(array , transition.to( sheetChooseInstance4, { time=500, x= display.contentWidth  / 4}))
+		
+		sheetChooseInstance1:addEventListener("tap", function() selectTapHandler(1) end);
+		sheetChooseInstance2:addEventListener("tap", function() selectTapHandler(2) end);
+		sheetChooseInstance3:addEventListener("tap", function() selectTapHandler(3) end);
+		sheetChooseInstance4:addEventListener("tap", function() selectTapHandler(4) end);
+
+	end
+
+	function selectTapHandler(event) 
+		print(event);
 	end
 
 	--button:addEventListener( "tap", button )
