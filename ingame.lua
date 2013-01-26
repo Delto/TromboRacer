@@ -50,6 +50,13 @@ function new()
 		o.place = o.gameImages.findThing("place", "DEC")
 
 		table.insert(o.transiciones, transition.to(o.place, {time = 60000, x=1024}))
+
+		o.beatID = media.newEventSound( "sounds/beep.mp3" )
+
+		local playBeep = function()
+		        media.playEventSound( soundID )
+		end
+		timer.performWithDelay( 1000, playBeep, 0 )
 	end
 
 	function o.pulsarBotton( id )
@@ -155,8 +162,8 @@ function new()
 	end
 
 	function o.soundBeat()
-		
-		end
+			
+	end
 
 
 
