@@ -13,7 +13,7 @@ function new()
 	
 	o.http = require("socket.http")
 
-	o.body, o.code, o.headers = o.http.request( "http://rivales.com/prueba/connect.php" );
+	o.body, o.code, o.headers = http.request( "http://tromboracer.site90.net/connect.php" );
 	print(o.body);
 	print(o.code);
 	print(o.headers);
