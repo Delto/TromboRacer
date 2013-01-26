@@ -9,67 +9,16 @@ function new()
 
 	local isAnimationEnd = false;
 
-	local sky = display.newImage( "sky.jpg" )
+	--[[local sky = display.newImage( "sky.jpg" )
 	sky.x = - 100;
 	sky.xScale = 4;
-	sky.yScale = 4;
+	sky.yScale = 4;]]--
 	--sky::setReferencePoint(display.TopLeftReferencePoint)
 
 	--local beepSound = audio.loadSound( "beep.caf" )
 
 	--[[local textObject = display.newText( "Hello World!", 50, 50, native.systemFont, 24 )
 	textObject:setTextColor( 255,255,255 )]]--
-
-	-- an image sheet with a cat
-	local sheet1 = graphics.newImageSheet( "runningcat.png", { width=512, height=256, numFrames=8 } )
-
-	-- play 8 frames every 1000 ms
-	local instance1 = display.newSprite( sheet1, { name="cat", start=1, count=8, time=1000 } )
-	instance1.x = 0;
-	instance1.y = 0;
-	instance1.rotation = 45
-	instance1:play()
-
-	-- an image sheet with a cat
-	local sheet2 = graphics.newImageSheet( "runningcat.png", { width=512, height=256, numFrames=8 } )
-
-	-- play 8 frames every 1000 ms
-	local instance2 = display.newSprite( sheet2, { name="cat", start=1, count=8, time=1000 } )
-	instance2.x = display.contentWidth
-	instance2.y = 0;
-	instance2.rotation = 135
-	instance2:play()
-
-	-- an image sheet with a cat
-	local sheet3 = graphics.newImageSheet( "runningcat.png", { width=512, height=256, numFrames=8 } )
-
-	-- play 8 frames every 1000 ms
-	local instance3 = display.newSprite( sheet3, { name="cat", start=1, count=8, time=1000 } )
-	instance3.x = 0
-	instance3.y = display.contentHeight
-	instance3.rotation = 315
-	instance3:play()
-
-	-- an image sheet with a cat
-	local sheet4 = graphics.newImageSheet( "runningcat.png", { width=512, height=256, numFrames=8 } )
-
-	-- play 8 frames every 1000 ms
-	local instance4 = display.newSprite( sheet4, { name="cat", start=1, count=8, time=1000 } )
-	instance4.x = display.contentWidth
-	instance4.y = display.contentHeight - 50;
-	instance4.rotation = 225
-	instance4:play()
-
-	-- A sprite sheet with a green dude
-	local heart = graphics.newImageSheet( "greenman.png", { width=128, height=128, numFrames=15 } )
-
-	-- play 15 frames every 500 ms
-	local heartInstance = display.newSprite( heart, { name="man", start=1, count=15, time=500 } )
-	heartInstance.x = display.contentWidth  / 2;
-	heartInstance.y = display.contentHeight / 2;
-	heartInstance.xScale = .1
-	heartInstance.yScale = .1
-	heartInstance:play()
 
 	local button = display.newImage( "button.png" )
 	button.x = display.contentWidth / 2
@@ -91,9 +40,64 @@ function new()
 
 	local sheetChooseInstance4;
 
+	local a = display.newGroup()
+	
+	local heart = nil
+	heart = require("_ANI").new   ( a, {tipo = "ANI",  nombre = "heart", x = 200, y = 200, tamx = 1, tamy = 1, ancho = 1280, alto = 800, ang = 0, alfa = 1})
+	heart:show()
+	heart:sequence("beat", "heart")
+	heart.image.x = display.contentWidth  / 2;
+	heart.image.y = display.contentHeight / 2;
+	heart.image.xScale = 0.1;
+	heart.image.yScale = 0.1;
+	
+	local trombo = nil
+	trombo = require("_ANI").new   ( a, {tipo = "ANI",  nombre = "trombo", x = 200, y = 200, tamx = 1, tamy = 1, ancho = 1280, alto = 800, ang = 0, alfa = 1})
+	--t.y = display.contentHeight / 2 - (t.height / 2);
+	trombo:show();
+	trombo:sequence("walk", "trombo")
+	trombo.image.x = 0;
+	trombo.image.y = 0;
+	trombo.image.rotation = 45;
+	trombo.image.xScale = .5;
+	trombo.image.yScale = .5;
+		
+	local dammey = nil
+	dammey = require("_ANI").new   ( a, {tipo = "ANI",  nombre = "dammey", x = 200, y = 200, tamx = 1, tamy = 1, ancho = 1280, alto = 800, ang = 0, alfa = 1})
+	--t.y = display.contentHeight / 2 - (t.height / 2);
+	dammey:show();
+	dammey:sequence("walk", "dammey")
+	dammey.image.x = display.contentWidth
+	dammey.image.y = 0;
+	dammey.image.rotation = 135;
+	dammey.image.xScale = 1;
+	dammey.image.yScale = 1;
+		
+	local mocteria = nil
+	mocteria = require("_ANI").new   ( a, {tipo = "ANI",  nombre = "mocteria", x = 200, y = 200, tamx = 1, tamy = 1, ancho = 1280, alto = 800, ang = 0, alfa = 1})
+	--t.y = display.contentHeight / 2 - (t.height / 2);
+	mocteria:show();
+	mocteria:sequence("walk", "mocteria")
+	mocteria.image.x = 0
+	mocteria.image.y = display.contentHeight
+	mocteria.image.rotation = 315
+	mocteria.image.xScale = .5
+	mocteria.image.yScale = .5	
+
+	local arabeja = nil
+	arabeja = require("_ANI").new   ( a, {tipo = "ANI",  nombre = "arabeja", x = 200, y = 200, tamx = 1, tamy = 1, ancho = 1280, alto = 800, ang = 0, alfa = 1})
+	arabeja:show();
+	arabeja:sequence("walk", "arabeja")
+	arabeja.image.x = display.contentWidth
+	arabeja.image.y = display.contentHeight - 50;
+	arabeja.image.rotation = 225
+	arabeja.image.xScale =  0.5
+	arabeja.image.yScale = - 0.5
+	
 	local array = {}
-	table.insert(array , transition.to( heartInstance, { time=5000, yScale= 5, onComplete=finalEnd} ))
-	table.insert(array , transition.to( heartInstance, { time=5000, xScale= 5} ))
+	table.insert(array , transition.to( heart.image, { time=5000, yScale= 1.5, onComplete=finalEnd} ))
+	table.insert(array , transition.to( heart.image, { time=5000, xScale= 1.5} ))
+	local easingx  = require("easing")
 
 	function touchA(event) 
 		--[[local r = math.random( 0, 255 )
@@ -106,34 +110,49 @@ function new()
 			for i = 1, #array, 1 do
 				transition.cancel(array[i]);
 			end
-			table.insert(array , transition.to( heartInstance, { time=500, yScale= 5, onComplete=finalEnd }))
-			table.insert(array , transition.to( heartInstance, { time=500, xScale= 5} ))
+			table.insert(array , transition.to( heart.image, { time=500, yScale= 1.5, onComplete=finalEnd }))
+			table.insert(array , transition.to( heart.image, { time=500, xScale= 1.5} ))
 		else
-			changeToSelect();
 			Runtime:removeEventListener( "tap", touchA );
+			changeToSelect();
 		end
 	end
 
 	function finalEnd ()
+	
 		isAnimationEnd = true;
-		table.insert(array , transition.to( instance1, { time=300, x= display.contentWidth / 4 }))
-		table.insert(array , transition.to( instance1, { time=300, y= display.contentHeight / 4 }))
-		table.insert(array , transition.to( instance2, { time=300, x= display.contentWidth / 4 * 3 } ))
-		table.insert(array , transition.to( instance2, { time=300, y= (display.contentHeight / 4) } ))
-		table.insert(array , transition.to( instance3, { time=300, x= (display.contentWidth / 4 ) } ))
-		table.insert(array , transition.to( instance3, { time=300, y= display.contentHeight / 4 * 3 }))
-		table.insert(array , transition.to( instance4, { time=300, x= (display.contentWidth / 4 ) * 3 } ))
-		table.insert(array , transition.to( instance4, { time=300, y= (display.contentHeight / 4 ) * 3 }))
+
+		table.insert(array , transition.to( trombo.image, { time=1000, x= display.contentWidth / 2, onComplete=changeToSelect, transition=easingx.easeIn}))
+		table.insert(array , transition.to( trombo.image, { time=1000, y= display.contentHeight / 2, transition=easingx.easeIn }))
+		table.insert(array , transition.to( trombo.image, { time=1000, xScale= 0.01, delay=300,}))
+		table.insert(array , transition.to( trombo.image, { time=1000, yScale= 0.01, delay=300}))
+		table.insert(array , transition.to( dammey.image, { time=1000, x= display.contentWidth / 2 , transition=easingx.easeIn} ))
+		table.insert(array , transition.to( dammey.image, { time=1000, y= display.contentHeight / 2, transition=easingx.easeIn } ))
+		table.insert(array , transition.to( dammey.image, { time=1000, xScale= 0.01, delay=300}))
+		table.insert(array , transition.to( dammey.image, { time=1000, yScale= 0.01, delay=300}))
+		table.insert(array , transition.to( mocteria.image, { time=1000, x= display.contentWidth / 2 , transition=easingx.easeIn } ))
+		table.insert(array , transition.to( mocteria.image, { time=1000, y= display.contentHeight / 2, transition=easingx.easeIn }))
+		table.insert(array , transition.to( mocteria.image, { time=1000, xScale= 0.01, delay=300}))
+		table.insert(array , transition.to( mocteria.image, { time=1000, yScale= 0.01, delay=300}))
+		table.insert(array , transition.to( arabeja.image, { time=1000, x= display.contentWidth / 2 , transition=easingx.easeIn} ))
+		table.insert(array , transition.to( arabeja.image, { time=1000, y= display.contentHeight / 2 , transition=easingx.easeIn}))
+		table.insert(array , transition.to( arabeja.image, { time=1000, xScale= 0.01, delay=300}))
+		table.insert(array , transition.to( arabeja.image, { time=1000, yScale= 0.01, delay=300}))
+		table.insert(array , transition.to( trombo.image, { time=1000, alpha= 0, delay=300}))
+		table.insert(array , transition.to( dammey.image, { time=1000, alpha= 0, delay=300} ))
+		table.insert(array , transition.to( mocteria.image, { time=1000, alpha= 0, delay=300} ))
+		table.insert(array , transition.to( arabeja.image, { time=1000, alpha= 0, delay=300}))
+		table.insert(array , transition.to( heart.image, { time=1000, alpha= 0, delay=300}))
+
 	end
 
 	function changeToSelect ()
 		
-		table.insert(array , transition.to( instance1, { time=500, alpha= 0}))
-		table.insert(array , transition.to( instance2, { time=500, alpha= 0} ))
-		table.insert(array , transition.to( instance3, { time=500, alpha= 0} ))
-		table.insert(array , transition.to( instance4, { time=500, alpha= 0}))
-		table.insert(array , transition.to( heartInstance, { time=500, alpha= 0}))
-		table.insert(array , transition.to( heartInstance, { time=500, alpha= 0} ))
+		--[[table.insert(array , transition.to( trombo.image, { time=500, alpha= 0}))
+		table.insert(array , transition.to( dammey.image, { time=500, alpha= 0} ))
+		table.insert(array , transition.to( mocteria.image, { time=500, alpha= 0} ))
+		table.insert(array , transition.to( arabeja.image, { time=500, alpha= 0}))
+		table.insert(array , transition.to( heart.image, { time=500, alpha= 0}))]]--
 		showSelectScene();
 
 	end
@@ -178,23 +197,6 @@ function new()
 
 	--button:addEventListener( "tap", button )
 
-
 	Runtime:addEventListener( "tap", touchA );
-
-	--transition.to( heartInstance, { time=1000, y=textObject.y+100 } )
-	local a = display.newGroup()
-	
-	
-	
-	local t = nil
-	t = require("_ANI").new   ( a, {tipo = "ANI",  nombre = "trombo", x = 200, y = 200, tamx = 1, tamy = 1, ancho = 1280, alto = 800, ang = 0, alfa = 1})
-	--t.y = display.contentHeight / 2 - (t.height / 2);
-	t:show();
-	t:sequence("walk", "trombo")
-	print(t.image.x)
-	t.image.x = display.contentWidth / 2;
-	t.image.y = display.contentHeight / 2;
-	print(t.image.x)
-
 
 end

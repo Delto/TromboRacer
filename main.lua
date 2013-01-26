@@ -15,5 +15,5 @@ function iniciarMenu()
 	require("mainMenu").new()
 end
 
-iniciarJuego()
---iniciarMenu()
+--iniciarJuego()
+iniciarMenu()
