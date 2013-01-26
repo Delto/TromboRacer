@@ -18,6 +18,7 @@ function new()
 	o.enemysID = {}
 	o.beatState = -4
 	o.tapNumber = 0
+	o.playersInitial = {}
 
 
 	function o.load( _player )
@@ -25,10 +26,11 @@ function new()
 
 		o.bg = o.gameImages.findThing("bg", "DEC")
 
-		o.eyes = o.gameImages.findThing("ojos", "ANI")
+		o.players = o.gameImages.findThing("ojos", "ANI")
 
-		for i=1, #o.eyes do
-			o.eyes[i]:sequence("pestaneo", "ojos")
+		for i=1, #o.players do
+			o.players[i]:sequence("pestaneo", "ojos")
+			o.playersInitial[i] = o.players[i].x
 		end
 
 		o.buttons = o.gameImages.findThing("button", "DEC")
@@ -118,6 +120,7 @@ function new()
 				if o.enemysID[i] == o.playerAction[i][o.round] then
 					o.enemys[i]:setFillColor(220,255,220)
 				else
+					o.moverPlayer(i, -50)
 					o.enemys[i]:setFillColor(0,0,0)
 				end
 
@@ -140,20 +143,32 @@ function new()
 			end
 
 			if o.tapNumber == 1 and o.beatState == 1 then 
-				print ("primer beat acertado")
+				o.moverPlayer(1, 1)
 			elseif o.tapNumber == 1 and o.beatState == 2 then 
 				print ("primer beat fallado")
 			elseif o.tapNumber == 1 and o.beatState == 3 then 
-				print ("venga vale lo acepto")
+				o.moverPlayer(1, 2)
 			elseif o.tapNumber == 2 and o.beatState == 1 then 
-				print ("y este tambien")
+				o.moverPlayer(1, 1)
 			elseif o.tapNumber == 2 and o.beatState == 2 then 
 				print ("segundo beat fallado")
 			elseif o.tapNumber == 2 and o.beatState == 3 then 
-				print ("segundo beat acertado")
+				o.moverPlayer(1, 2)
 			else
-				print (o.tapNumber, o.beatState)
+				o.moverPlayer(1, -1)
 			end
+		end
+	end
+
+	function o.moverPlayer( id, dis)
+		if o.players[id].x + dis > o.playersInitial[id] + 150 or o.players[id].x + dis < o.playersInitial[id] - 150 then
+			for i = 1, #o.players do
+				if id ~= i then
+					o.players[i].x = o.players[i].x - dis 
+				end
+			end
+		else
+			o.players[id].x = o.players[id].x + dis 
 		end
 	end
 
@@ -182,9 +197,6 @@ function new()
 		end
 
 		audio.play( o.beatID, { onComplete=closure } )
-
-
-		
 	end
 
 
