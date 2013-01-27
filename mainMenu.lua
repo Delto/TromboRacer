@@ -13,10 +13,11 @@ function new()
 	
 	o.http = require("socket.http")
 
-	o.body, o.code, o.headers = o.http.request( "http://tromboracer.site90.net/connect.php" );
-	print(o.body);
-	print(o.code);
-	print(o.headers);
+	o.connection = require("connect").new();
+	--o.connection.getInfo("select+*+from+user");
+	o.connection = require("connect").new();
+	o.connection.setGame("asdasda", {0,0,0,1,2,0,2,1,2,1}, {0,0,0,1,2,0,2,1,2,1});	
+
 	--[[local sky = display.newImage( "sky.jpg" )
 	sky.x = - 100;
 	sky.xScale = 4;
