@@ -13,7 +13,7 @@ function new()
 	
 	o.http = require("socket.http")
 
-	o.body, o.code, o.headers = http.request( "http://tromboracer.site90.net/connect.php" );
+	o.body, o.code, o.headers = o.http.request( "http://tromboracer.site90.net/connect.php" );
 	print(o.body);
 	print(o.code);
 	print(o.headers);
@@ -127,6 +127,7 @@ function new()
 	end
 
 	function o.finalEnd ()
+		Runtime:removeEventListener( "tap", touchA );
 	
 		o.isAnimationEnd = true;
 
@@ -200,11 +201,44 @@ function new()
 	end
 
 	function o.selectTapHandler(event) 
-		print(event);
+		_G["iniciarJuego"]( event )
+	end
+
+	function o.deleteAll()
+		for i = 1, #o.array do
+			transition.cancel(o.array[i])
+		end
+
+		o.workRatioWidth = nil
+		o.workRatioHeight = nil
+
+		o.aspectRatioY = nil
+		o.aspectRatioY = nil
+
+		o.button:removeSelf()
+
+		o.sheetChooseInstance1:removeSelf()
+		o.sheetChooseInstance2:removeSelf()
+		o.sheetChooseInstance3:removeSelf()
+		o.sheetChooseInstance4:removeSelf()
+
+		o.a:removeSelf()
+
+		o.sheetChooseInstance1:removeEventListener("tap", function() o.selectTapHandler(1) end);
+		o.sheetChooseInstance2:removeEventListener("tap", function() o.selectTapHandler(2) end);
+		o.sheetChooseInstance3:removeEventListener("tap", function() o.selectTapHandler(3) end);
+		o.sheetChooseInstance4:removeEventListener("tap", function() o.selectTapHandler(4) end);
+		Runtime:removeEventListener( "tap", touchA );
+
+		o = nil
+
+		return o
 	end
 
 	--button:addEventListener( "tap", button )
 
 	Runtime:addEventListener( "tap", touchA );
+
+	return o
 
 end

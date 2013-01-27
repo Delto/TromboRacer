@@ -266,17 +266,6 @@ function new ( _nombre, _nombreObjeto )
 		o.spr_set   = nil
 		o.carta     = nil
 
-		for i = #o.sheetsPrecargados, 1, -1 do
-			o.sheetsPrecargados[i] = nil
-		end
-		o.sheetsPrecargados = nil
-
-		for i = o.sheetsPrecargadosCapa.numChildren, 1 , -1 do
-			o.sheetsPrecargadosCapa[i]:removeSelf()
-			o.sheetsPrecargadosCapa[i] = nil
-		end
-		o.sheetsPrecargadosCapa = nil
-
 		display.remove( o )
 		o = nil
 	end

@@ -74,7 +74,6 @@ function new( _capa, _datos )
 			o.datos.nombre = o.datos.nombreReal
 		end
 		
-		o:pararAnimacion()
 		o.image.destroy()
 		o.image = nil
 		o = nil

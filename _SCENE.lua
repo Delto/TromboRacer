@@ -131,7 +131,8 @@ function new ( _scene )
 
 	-- Destructor
 	function o.delete()
-		detenerTrans_escena ()
+
+		print ("test")
 
 		--print("Eliminando TODOS LOS GRAFICOS")
 		for n = #o.todosLosGraficos, 1, -1 do

@@ -9,10 +9,10 @@ function new()
 	o.transiciones = {}
 	o.timers = {}
 	o.playerAction = {}
-	o.playerAction[1] = {}
-	o.playerAction[2] = {1,2,1,2,1,3,1,2,2,1}
-	o.playerAction[3] = {}
-	o.playerAction[4] = {1,1,1,1,2,3,2,1,2,1}
+	o.playerAction[1] = {1,2,1,2,1,0,1,2,2,1}
+	o.playerAction[2] = {1,2,1,2,1,0,1,2,2,1}
+	o.playerAction[3] = {1,2,1,2,1,0,1,2,2,1}
+	o.playerAction[4] = {1,1,1,1,2,0,2,1,2,1}
 	o.round = 1
 	o.showingEnemys = false
 	o.enemysID = {}
@@ -31,6 +31,10 @@ function new()
 
 
 	function o.load( _player )
+		o.player = _player
+
+		o.playerAction[o.player] = {}
+		
 		o.gameImages = require("_SCENE").new("ingame_info")
 
 		o.bg = o.gameImages.findThing("bg", "DEC")
@@ -91,22 +95,21 @@ function new()
 			r = o.round
 		end
 
-		if o.playerAction[1][r] == nil then
+		if o.playerAction[o.player][r] == nil then
 			if id == 1 and o.saltosDisponibles > 0 then
 				o.saltosDisponibles = o.saltosDisponibles - 1
 				print ("salto")
-				o.playerAction[1][r] = 1
+				o.playerAction[o.player][r] = 1
 				o.buttons[2].alpha = 0.3
 				o.buttons[3].alpha = 0.3
 			elseif id == 2 then
 				print ("morder")
-				o.playerAction[1][r] = 2
-
+				o.playerAction[o.player][r] = 2
 				o.buttons[1].alpha = 0.3
 				o.buttons[3].alpha = 0.3
 			elseif id == 3 then 
 				print ("ladrar")
-				o.playerAction[1][r] = 3
+				o.playerAction[o.player][r] = 3
 				o.buttons[2].alpha = 0.3
 				o.buttons[1].alpha = 0.3
 			end
@@ -172,17 +175,32 @@ function new()
 					o.players[i]:sequence("roar", o.players[i]:getSheet())
 				end
 
-				if (o.enemysID == 1 and o.playerAction[i][o.round] == 2) or (o.enemysID == 2 and o.playerAction[i][o.round] == 3) or o.playerAction[i][o.round] == nil then
-					table.insert(o.transiciones, transition.to(o.enemys[i], {time = 100, x=o.players[i].x , alpha = 0, onComplete = closure2}))
-					o.parpadearImagen(o.players[i], true)
-					o.moverPlayer(i, -20)
-					o.players[i]:sequence("hit", o.players[i]:getSheet())
-				elseif o.playerAction[i][o.round] == 1 then
-					table.insert(o.transiciones, transition.to(o.enemys[i], {time = 500, x=-200, onComplete = closure2}))
+				if i == o.player then
+					if (o.enemysID == 1 and o.playerAction[i][o.round] == 2) or (o.enemysID == 2 and o.playerAction[i][o.round] == 3) or o.playerAction[i][o.round] == nil then
+						table.insert(o.transiciones, transition.to(o.enemys[i], {time = 100, x=o.players[i].x , alpha = 0, onComplete = closure2}))
+						o.parpadearImagen(o.players[i], true)
+						o.moverPlayer(i, -20)
+						o.players[i]:sequence("hit", o.players[i]:getSheet())
+					elseif o.playerAction[i][o.round] == 1 then
+						table.insert(o.transiciones, transition.to(o.enemys[i], {time = 500, x=-200, onComplete = closure2}))
+					else
+						o.moverPlayer(i, 20)
+						table.insert(o.timers, timer.performWithDelay(1250, closure2))
+						o.parpadearImagen(o.enemys[i], false)
+					end
 				else
-					o.moverPlayer(i, 20)
-					table.insert(o.timers, timer.performWithDelay(1250, closure2))
-					o.parpadearImagen(o.enemys[i], false)
+					if o.playerAction[i][o.round] == 2 then
+						table.insert(o.transiciones, transition.to(o.enemys[i], {time = 500, x=-200, onComplete = closure2}))
+					elseif o.playerAction[i][o.round] == 0 then
+						table.insert(o.transiciones, transition.to(o.enemys[i], {time = 100, x=o.players[i].x , alpha = 0, onComplete = closure2}))
+						o.parpadearImagen(o.players[i], true)
+						o.moverPlayer(i, -20)
+						o.players[i]:sequence("hit", o.players[i]:getSheet())
+					else
+						o.moverPlayer(i, 20)
+						table.insert(o.timers, timer.performWithDelay(1250, closure2))
+						o.parpadearImagen(o.enemys[i], false)
+					end
 				end
 
 				--table.insert(o.transiciones, transition.to(o.enemys[i], {time = 100, x=200, alpha = 0, onComplete = closure2}))
@@ -232,12 +250,12 @@ function new()
 		table.insert(o.timers, timer.performWithDelay(500, sacarSegundo))
 		table.insert(o.timers, timer.performWithDelay(750, sacarTercero))
 		table.insert(o.timers, timer.performWithDelay(1000, sacarCuarto))
-		table.insert(o.timers, timer.performWithDelay(1250, o.sacarPuntuaciones))
+		table.insert(o.timers, timer.performWithDelay(2250, o.sacarPuntuaciones))
 
 	end
 
 	function o.sacarPuntuaciones()
-		
+		_G["iniciarMenu"]( )
 	end
 
 	table.insert(o.timers, timer.performWithDelay(2500, o.showEnemys))
@@ -250,19 +268,19 @@ function new()
 			end
 
 			if o.tapNumber == 1 and o.beatState == 1 then 
-				o.moverPlayer(1, 1)
+				o.moverPlayer(o.player, 1)
 			elseif o.tapNumber == 1 and o.beatState == 2 then 
 				print ("primer beat fallado")
 			elseif o.tapNumber == 1 and o.beatState == 3 then 
-				o.moverPlayer(1, 2)
+				o.moverPlayer(o.player, 2)
 			elseif o.tapNumber == 2 and o.beatState == 1 then 
-				o.moverPlayer(1, 1)
+				o.moverPlayer(o.player, 1)
 			elseif o.tapNumber == 2 and o.beatState == 2 then 
 				print ("segundo beat fallado")
 			elseif o.tapNumber == 2 and o.beatState == 3 then 
-				o.moverPlayer(1, 2)
+				o.moverPlayer(o.player, 2)
 			else
-				o.moverPlayer(1, -1)
+				o.moverPlayer(o.player, -1)
 			end
 		end
 	end
@@ -288,7 +306,7 @@ function new()
 		o.beatState = 1
 
 		function closure()
-			if o.beatState == 1 then
+			if o ~= nil and o.beatState == 1 then
 				o.beatState = 2
 			end
 		end
@@ -302,9 +320,11 @@ function new()
 		o.beatState = 3
 
 		function closure()
-			o.tapNumber = 0
-			o.beatState = 0
-			table.insert(o.timers, timer.performWithDelay((15 -(o.round/2))* 100 , o.soundBeat1))
+			if o ~= nil then
+				o.tapNumber = 0
+				o.beatState = 0
+				table.insert(o.timers, timer.performWithDelay((15 -(o.round/2))* 100 , o.soundBeat1))
+			end
 		end
 
 		audio.play( o.beatID, { onComplete=closure } )
@@ -353,6 +373,31 @@ function new()
 		table.insert(o.transiciones, transition.to(o.players[3], {time=t, y = 480}))
 	end
 	--Runtime:addEventListener("enterFrame", controlTest)
+
+	function o.deleteAll()
+		Runtime:removeEventListener("enterFrame", o.scrollBG)
+		Runtime:removeEventListener("tap", o.hacerTap)
+
+		for i = 1, #o.transiciones do
+			if o.transiciones[i] ~= nil then
+				transition.cancel(o.transiciones[i])
+			end
+		end
+
+		for i = 1, #o.timers do
+			if o.timers[i] ~= nil then
+				timer.cancel(o.timers[i])
+			end
+		end
+
+		o.gameImages.delete()
+
+		audio.dispose( o.beatID )
+
+		o = nil
+
+		return o
+	end
 
 	Runtime:addEventListener("enterFrame", o.scrollBG)
 	Runtime:addEventListener("tap", o.hacerTap)
