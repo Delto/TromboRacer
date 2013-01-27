@@ -13,6 +13,14 @@ function new()
 	o.playerAction[2] = {1,2,1,2,1,0,1,2,2,1}
 	o.playerAction[3] = {1,2,1,2,1,0,1,2,2,1}
 	o.playerAction[4] = {1,1,1,1,2,0,2,1,2,1}
+
+	o.playerBeats = {}
+	o.playerBeats[1] = {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
+	o.playerBeats[2] = {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
+	o.playerBeats[3] = {1,1,1,1,1,1}
+	o.playerBeats[4] = {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
+
+
 	o.round = 1
 	o.showingEnemys = false
 	o.enemysID = {}
@@ -34,7 +42,8 @@ function new()
 		o.player = _player
 
 		o.playerAction[o.player] = {}
-		
+		o.playerBeats[o.player] = {}
+
 		o.gameImages = require("_SCENE").new("ingame_info")
 
 		o.bg = o.gameImages.findThing("bg", "DEC")
@@ -82,6 +91,8 @@ function new()
 		o.beatID = audio.loadSound("sounds/beat.mp3")
 
 		o.soundBeat1()
+
+		o.crearMovimientosBeats()
 
 		o.mover()
 	end
@@ -286,18 +297,29 @@ function new()
 	end
 
 	function o.moverPlayer( id, dis)
-		if o.players[id].x + dis > o.playersInitial[id] + 150 or o.players[id].x + dis < o.playersInitial[id] - 150 then
-			for i = 1, #o.players do
-				if id ~= i then
-					if o.players[i].x - dis < o.playersInitial[i] + 150 or o.players[i].x - dis > o.playersInitial[i] - 150 then
-						o.players[i].x = o.players[i].x - dis 
-						o.puntuaciones[i].p = o.puntuaciones[i].p - dis
+		if o.juegoAtivo == true then
+			if o.players[id].x + dis > o.playersInitial[id] + 150 or o.players[id].x + dis < o.playersInitial[id] - 150 then
+				for i = 1, #o.players do
+					if id ~= i then
+						if o.players[i].x - dis < o.playersInitial[i] + 150 or o.players[i].x - dis > o.playersInitial[i] - 150 then
+							o.players[i].x = o.players[i].x - dis 
+							o.puntuaciones[i].p = o.puntuaciones[i].p - dis
+						end
+					end
+				end
+			else
+				o.puntuaciones[id].p = o.puntuaciones[id].p + dis
+				o.players[id].x = o.players[id].x + dis 
+
+				if dis > 0 then
+					if dis == 1 then
+						table.insert(o.playerBeats[o.player], "1")
+					elseif dis == 2 then
+						table.insert(o.playerBeats[o.player], "1")
+						table.insert(o.playerBeats[o.player], "1")
 					end
 				end
 			end
-		else
-			o.puntuaciones[id].p = o.puntuaciones[id].p + dis
-			o.players[id].x = o.players[id].x + dis 
 		end
 	end
 
@@ -351,10 +373,18 @@ function new()
 		table.insert(o.transiciones, transition.to(image, {time=250, alpha = 0, onComplete = aparecer1}))
 	end
 
+	function o.crearMovimientosBeats()
+		for i=1, #o.playerBeats do
+			if  i ~= o.player then
+				function o.sigAvanceBeat()
+					print ("test")
+					o.moverPlayer(i, 1)
+					table.insert(o.timers, timer.performWithDelay(50000 / #o.playerBeats[i], o.sigAvanceBeat))
+				end
 
-
-	function controlTest()
-		print(o.round)
+				table.insert(o.timers, timer.performWithDelay(50000 / #o.playerBeats[i], o.sigAvanceBeat))
+			end
+		end
 	end
 
 	function o.mover()
